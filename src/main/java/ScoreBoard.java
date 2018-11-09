@@ -2,40 +2,41 @@ import javafx.scene.control.Label;
 
 public class ScoreBoard {
     private final Label scoreBoard = new Label();
-    private final int[] score = new int[2];
+    private int playerScore;
+    private int computerScore;
     private final String playerName;
     
     public ScoreBoard() {
         this.playerName = "Player";
-        this.score[0] = 0;
-        this.score[1] = 0;
+        this.playerScore = 0;
+        this.computerScore = 0;
     }
     
     public ScoreBoard(String playerName) {
         this.playerName = playerName;
-        this.score[0] = 0;
-        this.score[1] = 0;
+        this.playerScore = 0;
+        this.computerScore = 0;
     }
     
-    public ScoreBoard(String playerName, int[] score) {
+    public ScoreBoard(String playerName, int playerScore, int computerScore) {
         this.playerName = playerName;
-        this.score[0] = score[0];
-        this.score[1] = score[1];
+        this.playerScore = playerScore;
+        this.computerScore = computerScore;
     }
     
     public void resetScoreBoard() {
-        score[0] = 0;
-        score[1] = 0;
+        playerScore = 0;
+        computerScore = 0;
     }
     public Label generateScoreBoard (){
-        scoreBoard.setText(playerName + ": " + score[0] + "  Computer: " + score[1]);
+        scoreBoard.setText(playerName + ": " + playerScore + "  Computer: " + computerScore);
         return new Label(scoreBoard.getText());
     }
     public Label addScore(boolean playerWin){
         if(playerWin){
-            score[0]++;
+            playerScore++;
         }else {
-            score[1]++;
+            computerScore++;
         }
         return generateScoreBoard();
     }

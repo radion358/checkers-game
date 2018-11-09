@@ -1,19 +1,37 @@
+import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameBoard {
     private Image greyMan = new Image("file:resources/greyMan.png");
     private Image redMan = new Image("file:resources/redMan.png");
     private Image greyKing = new Image("file:resources/greyKing.png");
     private Image redKing = new Image("file:resources/redKing.png");
-    
-    public Pane Deale(Pane board) {
-        //ImageView pawn = new ImageView();
-        return board;
+    private final static List<GreyPawn> greyPawnList = new ArrayList<>();
+    private final static List<RedPawn> redPawnList = new ArrayList<>();
+
+    public static List<GreyPawn> getGreyPawnList() {
+        return new ArrayList<>(greyPawnList);
+    }
+
+    public static List<RedPawn> getRedPawnList() {
+        return new ArrayList<>(redPawnList);
+    }
+
+    public Pane Deale() {
+        GridPane gameBoard = drawBoard();
+
+
+        return gameBoard;
     }
     
     public GridPane drawBoard() {
@@ -22,19 +40,15 @@ public class GameBoard {
                 + "-fx-border-width: 10;\n");
 
        
-        for(int x = 0; x < 7; x++) {
-            for(int y = 0; y < 7; y++){
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++){
                 if((x + y) % 2 == 0){
-                    StackPane lightTile = new StackPane();
-                    lightTile.getChildren().add(new Rectangle(110, 110, Color.YELLOW));
+                    Rectangle lightTile = new Rectangle(110, 110, Color.YELLOW);
                     gameBoard.add(lightTile, x, y);
                 }else {
-                    StackPane darkTile = new StackPane();
-                    darkTile.getChildren().add(new Rectangle(110, 110, Color.BLUE));
+                    Rectangle darkTile = new Rectangle(110, 110, Color.BLUE);
                     gameBoard.add(darkTile, x, y);
-                    
                 }
-                
             }
         }
         return gameBoard;

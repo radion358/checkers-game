@@ -64,7 +64,9 @@ public class GameRuner extends Application {
         background.getChildren().addAll(scoreBoardLabel, board);
         root.getChildren().addAll(gameMenuBar, background);
 
-        Scene scene = new Scene(root, 800, 900);
+        gameBoard.Deale(board);
+
+        Scene scene = new Scene(root, 890, 973);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Checkers game");
         primaryStage.setScene(scene);
