@@ -32,34 +32,27 @@ public abstract class Pawn extends StackPane {
                 if (isFieldEmpty(newPosX, newPosY)) {
                     if (isKing) {
                         return true;
-                    }else if ((posX - newPosX == 1) || (posX - newPosX == -1) ) {
-                        return true;
-                    }
+                    }else return (posX - newPosX == 1) || (posX - newPosX == -1);
                 }else return false;
             }else return false;
         }else return false;
-        return false;
     }
 
     private boolean isFieldEmpty(int newPosX, int newPosY) {
-        List<Integer> ocupiedX = new ArrayList<>(GameBoard.getGreyPawnList().stream()
+        List<Integer> occupiedX = new ArrayList<>(GameBoard.getGreyPawnList().stream()
                 .map(GreyPawn::getPosX)
                 .collect(Collectors.toList()));
         GameBoard.getRedPawnList().stream()
                 .map(Pawn::getPosX)
-                .forEach(ocupiedX::add);
+                .forEach(occupiedX::add);
 
-        List<Integer> ocupiedY = new ArrayList<>(GameBoard.getGreyPawnList().stream()
+        List<Integer> occupiedY = new ArrayList<>(GameBoard.getGreyPawnList().stream()
                 .map(GreyPawn::getPosY)
                 .collect(Collectors.toList()));
         GameBoard.getRedPawnList().stream()
                 .map(Pawn::getPosY)
-                .forEach(ocupiedY::add);
+                .forEach(occupiedY::add);
 
-        if (ocupiedX.contains(newPosX) && ocupiedY.contains(newPosY)) {
-            return false;
-        }else {
-            return true;
-        }
+        return !occupiedX.contains(newPosX) || !occupiedY.contains(newPosY);
     }
 }

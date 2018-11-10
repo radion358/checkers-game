@@ -19,6 +19,7 @@ public class GameBoard {
     private final static List<GreyPawn> greyPawnList = new ArrayList<>();
     private final static List<RedPawn> redPawnList = new ArrayList<>();
 
+
     public static List<GreyPawn> getGreyPawnList() {
         return new ArrayList<>(greyPawnList);
     }
@@ -27,8 +28,26 @@ public class GameBoard {
         return new ArrayList<>(redPawnList);
     }
 
-    public Pane Deale() {
+    public GridPane deal() {
         GridPane gameBoard = drawBoard();
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 3; y++){
+                if((x + y) % 2 != 0){
+                    RedPawn computerPawn = new RedPawn(x, y);
+                    redPawnList.add(computerPawn);
+                    gameBoard.add(computerPawn, x, y);
+                }
+            }
+        }
+        for(int x = 0; x < 8; x++) {
+            for(int y = 5; y < 8; y++){
+                if((x + y) % 2 != 0){
+                    GreyPawn playerPawn = new GreyPawn(x, y);
+                    greyPawnList.add(playerPawn);
+                    gameBoard.add(playerPawn, x, y);
+                }
+            }
+        }
 
 
         return gameBoard;
