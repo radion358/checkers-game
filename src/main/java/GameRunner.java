@@ -7,14 +7,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class GameRunner extends Application {
 
@@ -113,20 +108,13 @@ public class GameRunner extends Application {
         return b;
     }
     private String readRules() {
-        final StringBuilder rules = new StringBuilder();
+        String rules = "";
         ClassLoader classLoader = getClass().getClassLoader();
         try {
-            File file = new File(classLoader.getResource("src/main/resources/rules.txt").getFile());
-            try (Stream<String> fileLines = Files.lines(Paths.get(file.getPath()))){
-                fileLines.forEach(s -> rules.append(s));
-                return rules.toString();
-            } catch (IOException e) {
-                return "No such file or directory " + e;
-            }
+            rules = IOUtils.toString(classLoader.getResourceAsStream("rules.txt"));
         }catch (Exception e) {
-            System.out.println(e);
+            rules = e.toString();
         }
-
-        return "something wrong";
+        return rules;
     }
 }
