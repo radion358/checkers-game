@@ -1,35 +1,35 @@
-Gra warcaby klasyczne jest rozgrywana na planszy 8x8 pól pokolorowanych na przemian na kolor jasny i ciemny.
+Gra warcaby klasyczne jest rozgrywana na planszy 8x8 pÃ³l pokolorowanych na przemian na kolor jasny i ciemny.
 
-gracz rozpoczyna grê z dwunastoma pionami koloru szarego, ustawionymi na ciemniejszych polach planszy.
+gracz rozpoczyna grÄ™ z dwunastoma pionami koloru szarego, ustawionymi na ciemniejszych polach planszy.
 
-Jako pierwszy ruch wykonuje graj¹cy pionami szarymi, po czym gracze wykonuj¹ na zmianê kolejne ruchy.
+Jako pierwszy ruch wykonuje grajÄ…cy pionami szarymi, po czym gracze wykonujÄ… na zmianÄ™ kolejne ruchy.
 
-Celem gry jest zbicie wszystkich pionów przeciwnika albo zablokowanie wszystkich, które pozostaj¹ na planszy, 
-	pozbawiaj¹c przeciwnika mo¿liwoœci wykonania ruchu. Jeœli ¿aden z graczy nie jest w stanie tego osi¹gn¹æ 
-(ka¿dy z graczy wykona po 15 ruchów damkami bez zmniejszania liczby pionów pozostaj¹cych na planszy), nastêpuje remis.
+Celem gry jest zbicie wszystkich pionÃ³w przeciwnika albo zablokowanie wszystkich, ktÃ³re pozostajÄ… na planszy, 
+	pozbawiajÄ…c przeciwnika moÅ¼liwoÅ›ci wykonania ruchu. JeÅ›li Å¼aden z graczy nie jest w stanie tego osiÄ…gnÄ…Ä‡ 
+(kaÅ¼dy z graczy wykona po 15 ruchÃ³w damkami bez zmniejszania liczby pionÃ³w pozostajÄ…cych na planszy), nastÄ™puje remis.
 
-Piony mog¹ poruszaæ siê o jedno pole do przodu po przek¹tnej na wolne pola.
+Piony mogÄ… poruszaÄ‡ siÄ™ o jedno pole do przodu po przekÄ…tnej na wolne pola.
 
-Bicie pionem nastêpuje przez przeskoczenie s¹siedniego pionu przeciwnika na pole znajduj¹ce siê tu¿ za nim po przek¹tnej (pole to musi byæ wolne).
-	Zbite piony s¹ usuwane z planszy po zakoñczeniu ruchu.
+Bicie pionem nastÄ™puje przez przeskoczenie sÄ…siedniego pionu przeciwnika na pole znajdujÄ…ce siÄ™ tuÅ¼ za nim po przekÄ…tnej (pole to musi byÄ‡ wolne).
+	Zbite piony sÄ… usuwane z planszy po zakoÅ„czeniu ruchu.
 
-Piony mog¹ biæ zarówno do przodu, jak i do ty³u.
+Piony mogÄ… biÄ‡ zarÃ³wno do przodu, jak i do tyÅ‚u.
 
-W jednym ruchu wolno wykonaæ wiêcej ni¿ jedno bicie tym samym pionem, przeskakuj¹c przez kolejne piony przeciwnika.
+W jednym ruchu wolno wykonaÄ‡ wiÄ™cej niÅ¼ jedno bicie tym samym pionem, przeskakujÄ…c przez kolejne piony przeciwnika.
 
-Bicia s¹ obowi¹zkowe.
+Bicia sÄ… obowiÄ…zkowe.
 
-Pion, który dojdzie do ostatniego rzêdu planszy, staje siê damk¹, przy czym jeœli znajdzie siê tam w wyniku bicia 
-	i bêdzie móg³ wykonaæ kolejne bicie (do ty³u), to bêdzie musia³ je wykonaæ i nie staje siê wtedy damk¹.
+Pion, ktÃ³ry dojdzie do ostatniego rzÄ™du planszy, staje siÄ™ damkÄ…, przy czym jeÅ›li znajdzie siÄ™ tam w wyniku bicia 
+	i bÄ™dzie mÃ³gÅ‚ wykonaÄ‡ kolejne bicie (do tyÅ‚u), to bÄ™dzie musiaÅ‚ je wykonaÄ‡ i nie staje siÄ™ wtedy damkÄ….
 
-Kiedy pion staje siê damk¹, kolej ruchu przypada dla przeciwnika.
+Kiedy pion staje siÄ™ damkÄ…, kolej ruchu przypada dla przeciwnika.
 
-Damki mog¹ poruszaæ siê w jednym ruchu o dowoln¹ liczbê pól do przodu lub do ty³u po przek¹tnej, zatrzymuj¹c siê na wolnych polach.
+Damki mogÄ… poruszaÄ‡ siÄ™ w jednym ruchu o dowolnÄ… liczbÄ™ pÃ³l do przodu lub do tyÅ‚u po przekÄ…tnej, zatrzymujÄ…c siÄ™ na wolnych polach.
 
-Bicie damk¹ jest mo¿liwe z dowolnej odleg³oœci po linii przek¹tnej i nastêpuje przez przeskoczenie pionu (lub damki) przeciwnika, 
-	za którym musi znajdowaæ siê co najmniej jedno wolne pole.
-Damka przeskakuje na dowolne z tych pól i mo¿e kontynuowaæ bicie (na tej samej lub prostopad³ej linii).
+Bicie damkÄ… jest moÅ¼liwe z dowolnej odlegÅ‚oÅ›ci po linii przekÄ…tnej i nastÄ™puje przez przeskoczenie pionu (lub damki) przeciwnika, 
+	za ktÃ³rym musi znajdowaÄ‡ siÄ™ co najmniej jedno wolne pole.
+Damka przeskakuje na dowolne z tych pÃ³l i moÅ¼e kontynuowaÄ‡ bicie (na tej samej lub prostopadÅ‚ej linii).
 
-Kiedy istnieje kilka mo¿liwych biæ, gracz musi wykonaæ maksymalne (tzn. takie, w którym zbije najwiêksz¹ liczbê pionów lub damek przeciwnika).
+Kiedy istnieje kilka moÅ¼liwych biÄ‡, gracz musi wykonaÄ‡ maksymalne (tzn. takie, w ktÃ³rym zbije najwiÄ™kszÄ… liczbÄ™ pionÃ³w lub damek przeciwnika).
 
-Podczas bicia nie mo¿na przeskakiwaæ wiêcej ni¿ raz przez ten sam pion (damkê).
+Podczas bicia nie moÅ¼na przeskakiwaÄ‡ wiÄ™cej niÅ¼ raz przez ten sam pion (damkÄ™).

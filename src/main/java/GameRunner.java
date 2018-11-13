@@ -8,8 +8,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class GameRunner extends Application {
     private String playerName;
@@ -91,7 +96,11 @@ public class GameRunner extends Application {
         VBox mainBox = new VBox();
         controlBox.setAlignment(Pos.CENTER);
         controlBox.setSpacing(20);
-        mainBox.getChildren().add(controlBox);
+        String path = new File(".").getCanonicalPath();
+        System.out.println(path);
+        Label rules = new Label();
+        rules.setText(readRules());
+        mainBox.getChildren().addAll(controlBox, rules);
         newGameStage.setTitle("New Game");
         Scene newGameScene = new Scene(mainBox, 600, 600);
         newGameStage.setScene(newGameScene);
@@ -104,5 +113,22 @@ public class GameRunner extends Application {
         boolean b = Pattern.matches("[a-zA-Z]+", input);
         System.out.println(b);
         return b;
+    }
+    private String readRules() {
+        final StringBuilder rules = new StringBuilder();
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            File file = new File(classLoader.getResource("src/main/resources/rules.txt").getFile());
+            try (Stream<String> fileLines = Files.lines(Paths.get(file.getPath()))){
+                fileLines.forEach(s -> rules.append(s));
+                return rules.toString();
+            } catch (IOException e) {
+                return "No such file or directory " + e;
+            }
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return "something wrong";
     }
 }

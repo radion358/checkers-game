@@ -1,7 +1,5 @@
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class RedPawn extends Pawn {
 
@@ -12,11 +10,11 @@ public class RedPawn extends Pawn {
 
 
     public RedPawn(int posX, int posY) {
-        super(posX, posY);
+        super(posX, posY, "computer");
         ImageView view = new ImageView(redMan);
         view.setFitWidth(100);
         view.setFitHeight(100);
-        getChildren().addAll(new Rectangle(110, 110, Color.BLUE), view);
+        getChildren().add(view);
     }
 
 
