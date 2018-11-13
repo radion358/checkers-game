@@ -1,3 +1,4 @@
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -10,7 +11,8 @@ public class GameBoard {
     private final static List<Pawn> greyPawnList = new ArrayList<>();
     private final static List<Pawn> redPawnList = new ArrayList<>();
     private final  List<Pawn> pawnToRemove = new ArrayList<>();
-    private final List<Tile> avaiableMoves = new ArrayList<>();
+    private final List<Tile> availableMoves = new ArrayList<>();
+    private String whoseTurn;
 
 
     public static List<Pawn> getGreyPawnList() {
@@ -29,9 +31,7 @@ public class GameBoard {
                     RedPawn computerPawn = new RedPawn(x, y);
                     redPawnList.add(computerPawn);
                     gameBoard.add(computerPawn, x, y);
-                    computerPawn.setOnMouseClicked(e -> {
-                        showAwaiableMove("computer", computerPawn, gameBoard);
-                    });
+                    computerPawn.setOnMouseClicked((MouseEvent e) -> showAvailableMove(computerPawn, gameBoard));
                 }
             }
         }
@@ -41,11 +41,11 @@ public class GameBoard {
                     GreyPawn playerPawn = new GreyPawn(x, y);
                     greyPawnList.add(playerPawn);
                     gameBoard.add(playerPawn, x, y);
+                    playerPawn.setOnMouseClicked((MouseEvent e) -> showAvailableMove(playerPawn, gameBoard));
                 }
             }
         }
-
-
+        whoseTurn = "player";
         return gameBoard;
     }
 
@@ -68,26 +68,26 @@ public class GameBoard {
         }
         return gameBoard;
     }
-    public void move (GridPane gameBoard, String WhosTurn, Pawn pawn, int newPosX, int newPosY) {
+    public void move (GridPane gameBoard, Pawn pawn, int newPosX, int newPosY) {
         int oldPosX = pawn.getPosX();
         int oldPosY = pawn.getPosY();
-        List<Pawn> oponentPawnList;
-        if(isMoveAllowed(WhosTurn, pawn, newPosX, newPosY)) {
+        List<Pawn> opponentPawnList;
+        if(isMoveAllowed(pawn, newPosX, newPosY)) {
             if(pawn instanceof GreyPawn) {
                 greyPawnList.remove(pawn);
                 pawn.setPosX(newPosX);
                 pawn.setPosY(newPosY);
                 greyPawnList.add(pawn);
-                oponentPawnList = getRedPawnList();
+                opponentPawnList = getRedPawnList();
             }else {
                 redPawnList.remove(pawn);
                 pawn.setPosX(newPosX);
                 pawn.setPosY(newPosY);
                 redPawnList.add(pawn);
-                oponentPawnList = getGreyPawnList();
+                opponentPawnList = getGreyPawnList();
             }
 
-            if(jumpOverOponnent(oldPosX, oldPosY, newPosX, newPosY,oponentPawnList)) {
+            if(jumpOverOpponent(oldPosX, oldPosY, newPosX, newPosY,opponentPawnList)) {
                 pawnToRemove.forEach(gameBoard.getChildren()::remove);
             }else {
                 if(pawn instanceof GreyPawn){
@@ -99,13 +99,13 @@ public class GameBoard {
                         pawn.setKing(true);
                     }
                 }
-                //toggleTurn();
+                toggleTurn();
             }
         }
 
     }
-    private boolean isMoveAllowed (String whosTurn , Pawn pawn, int newPosX, int newPosY) {
-        if(whosTurn.equals(pawn.getWhoIs())){
+    private boolean isMoveAllowed (Pawn pawn, int newPosX, int newPosY) {
+        if(whoseTurn.equals(pawn.getWhoIs())){
             if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
                 if ((newPosX + newPosY) % 2 == 0) {
                     if (isFieldEmpty(newPosX, newPosY)) {
@@ -135,79 +135,69 @@ public class GameBoard {
 
         return !occupiedX.contains(newPosX) || !occupiedY.contains(newPosY);
     }
-    private boolean jumpOverOponnent(int oldPosX, int oldPosY, int newPosX, int newPosY, List<Pawn> oponentPawnList) {
+    private boolean jumpOverOpponent(int oldPosX, int oldPosY, int newPosX, int newPosY, List<Pawn> opponentPawnList) {
         if((oldPosX - newPosX)== 1 || (oldPosX - newPosX)== -1){
             return false;
         }else {
             if(newPosX > oldPosX ){
                 for(int x = oldPosX + 1; x < newPosX; x++) {
-                    if(newPosY > oldPosY) {
-                        for(int y = oldPosY + 1; y < newPosY; y++) {
-                            for(Pawn element: oponentPawnList){
-                                if(element.getPosX() == x){
-                                    if(element.getPosY() == y){
-                                        oponentPawnList.remove(element);
-                                        pawnToRemove.remove(element);
-                                    }
-                                }
-                            }
-                        }
-                    }else {
-                        for(int y = oldPosY - 1; y > newPosY; y--) {
-                            for(Pawn element: oponentPawnList){
-                                if(element.getPosX() == x){
-                                    if(element.getPosY() == y){
-                                        oponentPawnList.remove(element);
-                                        pawnToRemove.remove(element);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    removeOpponentPawn(oldPosY, newPosY, opponentPawnList, x);
                 }
             }else {
                 for(int x = oldPosX - 1; x < newPosX; x--) {
-                    if(newPosY > oldPosY) {
-                        for(int y = oldPosY + 1; y < newPosY; y++) {
-                            for(Pawn element: oponentPawnList){
-                                if(element.getPosX() == x){
-                                    if(element.getPosY() == y){
-                                        oponentPawnList.remove(element);
-                                        pawnToRemove.remove(element);
-                                    }
-                                }
-                            }
-                        }
-                    }else {
-                        for(int y = oldPosY - 1; y > newPosY; y--) {
-                            for(Pawn element: oponentPawnList){
-                                if(element.getPosX() == x){
-                                    if(element.getPosY() == y){
-                                        oponentPawnList.remove(element);
-                                        pawnToRemove.remove(element);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    removeOpponentPawn(oldPosY, newPosY, opponentPawnList, x);
                 }
             }
         }
         return true;
     }
-    private void showAwaiableMove(String whosTurn, Pawn pawn, GridPane gameBoard){
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++){
-                if((x + y) % 2 == 0){
-                    if(isMoveAllowed (whosTurn , pawn, x, y)){
-                        Tile tile = new Tile(x, y, 110, 110);
-                        avaiableMoves.add(tile);
-                        gameBoard.add(tile, x, y);
-                        tile.setOnMouseClicked(e -> move(gameBoard, whosTurn,
-                                pawn, tile.getPosX(), tile.getPosY()));
+
+    private void removeOpponentPawn(int oldPosY, int newPosY, List<Pawn> opponentPawnList, int x) {
+        if(newPosY > oldPosY) {
+            for(int y = oldPosY + 1; y < newPosY; y++) {
+                for(Pawn element: opponentPawnList){
+                    if(element.getPosX() == x){
+                        if(element.getPosY() == y){
+                            opponentPawnList.remove(element);
+                            pawnToRemove.remove(element);
+                        }
                     }
                 }
             }
+        }else {
+            for(int y = oldPosY - 1; y > newPosY; y--) {
+                for(Pawn element: opponentPawnList){
+                    if(element.getPosX() == x){
+                        if(element.getPosY() == y){
+                            opponentPawnList.remove(element);
+                            pawnToRemove.remove(element);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void showAvailableMove(Pawn pawn, GridPane gameBoard){
+        for(int x = 0; x < 8; x++) {
+            for(int y = 0; y < 8; y++){
+                if((x + y) % 2 == 0){
+                    System.out.println(x + " " + y);
+                    if(isMoveAllowed (pawn, x, y)){
+                        Tile tile = new Tile(x, y, 110, 110);
+                        availableMoves.add(tile);
+                        gameBoard.add(tile, x, y);
+                        tile.setOnMouseClicked(e -> move(gameBoard, pawn, tile.getPosX(), tile.getPosY()));
+                    }
+                }
+            }
+        }
+    }
+    private void toggleTurn() {
+        if (whoseTurn.equals("player")) {
+            whoseTurn = "computer";
+        }else {
+            whoseTurn = "player";
         }
     }
 }

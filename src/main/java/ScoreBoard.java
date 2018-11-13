@@ -4,7 +4,7 @@ public class ScoreBoard {
     private final Label scoreBoard = new Label();
     private int playerScore;
     private int computerScore;
-    private final String playerName;
+    private  String playerName;
     
     public ScoreBoard() {
         this.playerName = "Player";
@@ -39,5 +39,13 @@ public class ScoreBoard {
             computerScore++;
         }
         return generateScoreBoard();
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+    public String generateScoreBoardText (){
+        scoreBoard.setText(playerName + ": " + playerScore + "  Computer: " + computerScore);
+        return scoreBoard.getText();
     }
 }

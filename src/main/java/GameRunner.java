@@ -17,14 +17,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class GameRunner extends Application {
-    private String playerName;
 
     public static void main(String[] args) {
         launch(args);
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
-        AtomicReference<ScoreBoard> scoreBoard = new AtomicReference<>(new ScoreBoard());
+        ScoreBoard scoreBoard = new ScoreBoard();
         GameBoard gameBoard = new GameBoard();
 
         GridPane board = gameBoard.deal();
@@ -36,7 +35,7 @@ public class GameRunner extends Application {
 
 
 
-        Label scoreBoardLabel = scoreBoard.get().generateScoreBoard();
+        Label scoreBoardLabel = scoreBoard.generateScoreBoard();
         scoreBoardLabel.setFont(new Font(40));
 
         VBox root = new VBox();
@@ -87,7 +86,8 @@ public class GameRunner extends Application {
         Stage newGameStage = new Stage();
         startGame.setOnAction(event -> {
             if(nameValidator(playerNameInput.getText())) {
-                scoreBoard.set(new ScoreBoard(playerNameInput.getText()));
+                scoreBoard.setPlayerName(playerNameInput.getText());
+                scoreBoardLabel.setText(scoreBoard.generateScoreBoardText());
                 newGameStage.close();
             }else System.out.print(playerNameInput.getText());
         });
@@ -96,8 +96,6 @@ public class GameRunner extends Application {
         VBox mainBox = new VBox();
         controlBox.setAlignment(Pos.CENTER);
         controlBox.setSpacing(20);
-        String path = new File(".").getCanonicalPath();
-        System.out.println(path);
         Label rules = new Label();
         rules.setText(readRules());
         mainBox.getChildren().addAll(controlBox, rules);
