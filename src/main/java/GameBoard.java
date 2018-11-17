@@ -13,7 +13,6 @@ public class GameBoard {
     private final List<Tile> availableMoves = new ArrayList<>();
     private String whoseTurn;
     List<Pawn> occupiedField = new ArrayList<>();
-    //List<Integer> occupiedY = new ArrayList<>();
 
 
     public static List<Pawn> getGreyPawnList() {
@@ -73,49 +72,46 @@ public class GameBoard {
         int oldPosX = pawn.getPosX();
         int oldPosY = pawn.getPosY();
         List<Pawn> opponentPawnList;
-        if(isMoveAllowed(pawn, newPosX, newPosY)) {
-            if(pawn instanceof GreyPawn) {
-                greyPawnList.remove(pawn);
-                gameBoard.getChildren().remove(pawn);
-                pawn.setPosX(newPosX);
-                pawn.setPosY(newPosY);
-                greyPawnList.add(pawn);
-                gameBoard.add(pawn, pawn.getPosX(), pawn.getPosY());
-                for (Tile tile: availableMoves) {
-                    gameBoard.getChildren().remove(tile);
-                }
-                availableMoves.clear();
-                opponentPawnList = getRedPawnList();
-            }else {
-                redPawnList.remove(pawn);
-                gameBoard.getChildren().remove(pawn);
-                pawn.setPosX(newPosX);
-                pawn.setPosY(newPosY);
-                redPawnList.add(pawn);
-                gameBoard.add(pawn, pawn.getPosX(), pawn.getPosY());
-                for (Tile tile: availableMoves) {
-                    gameBoard.getChildren().remove(tile);
-                }
-                availableMoves.clear();
-                opponentPawnList = getGreyPawnList();
+        if(pawn instanceof GreyPawn) {
+            greyPawnList.remove(pawn);
+            gameBoard.getChildren().remove(pawn);
+            pawn.setPosX(newPosX);
+            pawn.setPosY(newPosY);
+            greyPawnList.add(pawn);
+            gameBoard.add(pawn, pawn.getPosX(), pawn.getPosY());
+            for(Pawn jumpedOverPawn: pawnToRemove) {
+                gameBoard.getChildren().remove(jumpedOverPawn);
+                redPawnList.remove(jumpedOverPawn);
             }
-
-            if(jumpOverOpponent(oldPosX, oldPosY, newPosX, newPosY,opponentPawnList)) {
-                pawnToRemove.forEach(gameBoard.getChildren()::remove);
-            }else {
-                if(pawn instanceof GreyPawn){
-                    if(pawn.getPosY() == 0){
-                        pawn.setKing(true);
-                    }
-                }else {
-                    if(pawn.getPosY() == 7) {
-                        pawn.setKing(true);
-                    }
-                }
-                toggleTurn();
+        }else {
+            redPawnList.remove(pawn);
+            gameBoard.getChildren().remove(pawn);
+            pawn.setPosX(newPosX);
+            pawn.setPosY(newPosY);
+            redPawnList.add(pawn);
+            gameBoard.add(pawn, pawn.getPosX(), pawn.getPosY());
+            for(Pawn jumpedOverPawn: pawnToRemove) {
+                gameBoard.getChildren().remove(jumpedOverPawn);
+                greyPawnList.remove(jumpedOverPawn);
             }
         }
+        for (Tile tile: availableMoves) {
+            gameBoard.getChildren().remove(tile);
+        }
+        availableMoves.clear();
+
+        if(pawn instanceof GreyPawn){
+            if(pawn.getPosY() == 0){
+                pawn.setKing(true);
+            }
+        }else {
+            if(pawn.getPosY() == 7) {
+                pawn.setKing(true);
+            }
+        }
+        toggleTurn();
     }
+
     private boolean isMoveAllowed (Pawn pawn, int newPosX, int newPosY) {
         if(whoseTurn.equals(pawn.getWhoIs())){
             if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
@@ -132,7 +128,10 @@ public class GameBoard {
     }
 
     private boolean isFieldEmpty(int newPosX, int newPosY) {
-        List<Pawn> pawnToRemove = new ArrayList<>();
+        if(newPosX < 0 || newPosX > 7 || newPosY < 0 || newPosY > 7) {
+            return false;
+        }
+        List<Pawn> pawnToRemoveFromOccupiedField = new ArrayList<>();
         occupiedField.clear();
         for (Pawn pawn: greyPawnList) {
             if (pawn.getPosX() == newPosX) {
@@ -146,10 +145,10 @@ public class GameBoard {
         }
         for (Pawn pawn: occupiedField) {
             if (pawn.getPosY() != newPosY) {
-                pawnToRemove.add(pawn);
+                pawnToRemoveFromOccupiedField.add(pawn);
             }
         }
-        for(Pawn pawn: pawnToRemove) {
+        for(Pawn pawn: pawnToRemoveFromOccupiedField) {
             occupiedField.remove(pawn);
         }
         if (occupiedField.size() == 0) {
@@ -157,48 +156,7 @@ public class GameBoard {
         }
         return false;
     }
-    private boolean jumpOverOpponent(int oldPosX, int oldPosY, int newPosX, int newPosY, List<Pawn> opponentPawnList) {
-        if((oldPosX - newPosX)== 1 || (oldPosX - newPosX)== -1){
-            return false;
-        }else {
-            if(newPosX > oldPosX ){
-                for(int x = oldPosX + 1; x < newPosX; x++) {
-                    removeOpponentPawn(oldPosY, newPosY, opponentPawnList, x);
-                }
-            }else {
-                for(int x = oldPosX - 1; x < newPosX; x--) {
-                    removeOpponentPawn(oldPosY, newPosY, opponentPawnList, x);
-                }
-            }
-        }
-        return true;
-    }
 
-    private void removeOpponentPawn(int oldPosY, int newPosY, List<Pawn> opponentPawnList, int x) {
-        if(newPosY > oldPosY) {
-            for(int y = oldPosY + 1; y < newPosY; y++) {
-                for(Pawn element: opponentPawnList){
-                    if(element.getPosX() == x){
-                        if(element.getPosY() == y){
-                            opponentPawnList.remove(element);
-                            pawnToRemove.remove(element);
-                        }
-                    }
-                }
-            }
-        }else {
-            for(int y = oldPosY - 1; y > newPosY; y--) {
-                for(Pawn element: opponentPawnList){
-                    if(element.getPosX() == x){
-                        if(element.getPosY() == y){
-                            opponentPawnList.remove(element);
-                            pawnToRemove.remove(element);
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     private void showAvailableMove(Pawn pawn, GridPane gameBoard){
         for (Tile tile: availableMoves) {
@@ -213,6 +171,53 @@ public class GameBoard {
                         availableMoves.add(tile);
                         gameBoard.add(tile, x, y);
                         tile.setOnMouseClicked(e -> move(gameBoard, pawn, tile.getPosX(), tile.getPosY()));
+                    }else if( ! isFieldEmpty(x, y)){
+                        if(((pawn.getPosX() - x) == 1)) {
+                            if(((pawn.getPosY() - y) == 1)) {
+                                if(isFieldEmpty(x - 1, y - 1) && jumpedPawnBelongsToOpponent(pawn)) {
+                                    Tile tile = new Tile(x - 1, y - 1, 110, 110);
+                                    availableMoves.add(tile);
+                                    gameBoard.add(tile, x - 1, y - 1);
+                                    tile.setOnMouseClicked(e -> {
+                                        addPawnToRemove(pawn.getPosX() - 1, pawn.getPosY() - 1);
+                                        move(gameBoard, pawn, tile.getPosX(), tile.getPosY());
+                                    });
+                                }
+                            }else if(((pawn.getPosY() - y) == -1)) {
+                                if(isFieldEmpty(x - 1, y + 1) && jumpedPawnBelongsToOpponent(pawn)) {
+                                    Tile tile = new Tile(x - 1, y + 1, 110, 110);
+                                    availableMoves.add(tile);
+                                    gameBoard.add(tile, x - 1, y + 1);
+                                    tile.setOnMouseClicked(e -> {
+                                        addPawnToRemove(pawn.getPosX() - 1, pawn.getPosY() + 1);
+                                        move(gameBoard, pawn, tile.getPosX(), tile.getPosY());
+                                    });
+                                }
+                            }
+                        }else if((pawn.getPosX() - x) == -1) {
+                            if(((pawn.getPosY() - y) == 1)) {
+                                if(isFieldEmpty(x + 1, y - 1) && jumpedPawnBelongsToOpponent(pawn)) {
+                                    Tile tile = new Tile(x + 1, y - 1, 110, 110);
+                                    availableMoves.add(tile);
+                                    gameBoard.add(tile, x + 1, y - 1);
+                                    tile.setOnMouseClicked(e -> {
+                                        addPawnToRemove(pawn.getPosX() +1, pawn.getPosY() - 1);
+                                        move(gameBoard, pawn, tile.getPosX(), tile.getPosY());
+                                    });
+                                }
+                            }else if(((pawn.getPosY() - y) == -1)) {
+                                if (isFieldEmpty(x + 1, y + 1) && jumpedPawnBelongsToOpponent(pawn)) {
+                                    Tile tile = new Tile(x + 1, y + 1, 110, 110);
+                                    availableMoves.add(tile);
+                                    gameBoard.add(tile, x + 1, y + 1);
+                                    tile.setOnMouseClicked(e -> {
+                                        addPawnToRemove(pawn.getPosX() +1, pawn.getPosY() + 1);
+                                        move(gameBoard, pawn, tile.getPosX(), tile.getPosY());
+
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -224,5 +229,32 @@ public class GameBoard {
         }else {
             whoseTurn = "player";
         }
+    }
+    private void addPawnToRemove(int x, int y) {
+        pawnToRemove.clear();
+        List<Pawn> pawnToRemoveFromPawnToRemove = new ArrayList<>();
+        for (Pawn pawn: greyPawnList) {
+            if (pawn.getPosX() == x) {
+                pawnToRemove.add(pawn);
+            }
+        }
+        for (Pawn pawn: redPawnList) {
+            if (pawn.getPosX() == x) {
+                pawnToRemove.add(pawn);
+            }
+        }
+        for (Pawn pawn: pawnToRemove) {
+            if (pawn.getPosY() != y) {
+                pawnToRemoveFromPawnToRemove.add(pawn);
+            }
+        }
+        for(Pawn pawn: pawnToRemoveFromPawnToRemove) {
+            pawnToRemove.remove(pawn);
+        }
+    }
+    private boolean jumpedPawnBelongsToOpponent(Pawn pawn) {
+        if(whoseTurn.equals(pawn.getWhoIs())){
+            return false;
+        }else return true;
     }
 }
