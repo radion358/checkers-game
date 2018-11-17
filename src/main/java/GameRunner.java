@@ -48,9 +48,9 @@ public class GameRunner extends Application {
         Menu changeTheme = new Menu("_Change theme");
 
         ToggleGroup themeToggle = new ToggleGroup();
-        RadioMenuItem theme1 = new RadioMenuItem("burgundowy");
-        RadioMenuItem theme2 = new RadioMenuItem("cos");
-        RadioMenuItem theme3 = new RadioMenuItem("proszę zmień mnie");
+        RadioMenuItem theme1 = new RadioMenuItem("some theme");
+        RadioMenuItem theme2 = new RadioMenuItem("some other theme");
+        RadioMenuItem theme3 = new RadioMenuItem("something else");
 
         theme1.setToggleGroup(themeToggle);
         theme2.setToggleGroup(themeToggle);
@@ -103,17 +103,16 @@ public class GameRunner extends Application {
     }
     private static boolean nameValidator(String input) {
         System.out.println(input);
-        boolean b = Pattern.matches("[a-zA-Z]+", input);
-        System.out.println(b);
-        return b;
+        boolean isNameValid = Pattern.matches("[a-zA-Z]+", input);
+        return isNameValid;
     }
     private String readRules() {
-        String rules = "";
+        String rules;
         ClassLoader classLoader = getClass().getClassLoader();
         try {
             rules = IOUtils.toString(classLoader.getResourceAsStream("rules.txt"));
         }catch (Exception e) {
-            rules = e.toString();
+            rules = e.toString() + "\nNo such file or directory";
         }
         return rules;
     }
