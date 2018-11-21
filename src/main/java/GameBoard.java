@@ -11,7 +11,7 @@ public class GameBoard {
     private final static List<Pawn> redPawnList = new ArrayList<>();
     private final  List<Pawn> pawnsToRemove = new ArrayList<>();
     public final List<Tile> availableMoves = new ArrayList<>();
-    private static String whoseTurn;
+    public String whoseTurn;
     List<Pawn> occupiedField = new ArrayList<>();
     public GridPane gameBoard = new GridPane();
 
@@ -63,12 +63,12 @@ public class GameBoard {
 
         if(pawn instanceof GreyPawn) {
             greyPawnList.remove(pawn);
-            changePawnPosition(pawn, newPosX, newPosY);
-            greyPawnList.add(pawn);
+            Pawn newPawn = changePawnPosition(pawn, newPosX, newPosY);
+            greyPawnList.add(newPawn);
         }else {
             redPawnList.remove(pawn);
-            changePawnPosition(pawn, newPosX, newPosY);
-            redPawnList.add(pawn);
+            Pawn newPawn = changePawnPosition(pawn, newPosX, newPosY);
+            redPawnList.add(newPawn);
         }
         for (Tile tile: availableMoves) {
             gameBoard.getChildren().remove(tile);
@@ -76,25 +76,27 @@ public class GameBoard {
         availableMoves.clear();
         for (Pawn pawnToRemove: pawnsToRemove) {
             gameBoard.getChildren().remove(pawnToRemove);
+            redPawnList.remove(pawnToRemove);
+            greyPawnList.remove(pawnToRemove);
         }
 
         if(pawn instanceof GreyPawn){
             if(pawn.getPosY() == 0){
                 pawn.setKing(true);
+                pawn.changeToKing();
             }
         }else {
             if(pawn.getPosY() == 7) {
                 pawn.setKing(true);
+                pawn.changeToKing();
             }
         }
         toggleTurn();
     }
 
     public boolean isMoveAllowed (Pawn pawn, int newPosX, int newPosY) {
-        if(whoseTurn.equals(pawn.getWhoIs())){
-            if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
-                return isFieldEmpty(newPosX, newPosY);
-            }else return false;
+        if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
+            return isFieldEmpty(newPosX, newPosY);
         }else return false;
     }
 
@@ -171,10 +173,11 @@ public class GameBoard {
         if(pawnList.size() != 0) return pawnList.get(0);
         return null;
     }
-    private void changePawnPosition(Pawn pawn, int newPosX, int newPosY) {
+    private Pawn changePawnPosition(Pawn pawn, int newPosX, int newPosY) {
         gameBoard.getChildren().remove(pawn);
         pawn.setPosX(newPosX);
         pawn.setPosY(newPosY);
         gameBoard.add(pawn, pawn.getPosX(), pawn.getPosY());
+        return pawn;
     }
 }
