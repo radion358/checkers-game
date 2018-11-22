@@ -97,7 +97,8 @@ public class GameBoard {
     public boolean isMoveAllowed (Pawn pawn, int newPosX, int newPosY) {
         if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
             return isFieldEmpty(newPosX, newPosY);
-        }else return false;
+        }
+        return false;
     }
 
     public boolean isFieldEmpty(int newPosX, int newPosY) {
