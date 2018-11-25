@@ -10,8 +10,8 @@ public class RedPawn extends Pawn {
 
 
 
-    public RedPawn(int posX, int posY) {
-        super(posX, posY, "computer");
+    RedPawn(int posX, int posY) {
+        super(posX, posY, "player2");
         view.setImage(redMan);
         view.setFitWidth(100);
         view.setFitHeight(100);

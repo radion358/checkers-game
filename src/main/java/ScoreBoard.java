@@ -1,51 +1,36 @@
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
 
-public class ScoreBoard {
-    private final Label scoreBoard = new Label();
-    private int playerScore;
-    private int computerScore;
-    private  String playerName;
-    
-    public ScoreBoard() {
-        this.playerName = "Player";
-        this.playerScore = 0;
-        this.computerScore = 0;
-    }
-    
-    public ScoreBoard(String playerName) {
-        this.playerName = playerName;
-        this.playerScore = 0;
-        this.computerScore = 0;
-    }
-    
-    public ScoreBoard(String playerName, int playerScore, int computerScore) {
-        this.playerName = playerName;
-        this.playerScore = playerScore;
-        this.computerScore = computerScore;
-    }
-    
-    public void resetScoreBoard() {
-        playerScore = 0;
-        computerScore = 0;
-    }
-    public Label generateScoreBoard (){
-        scoreBoard.setText(playerName + ": " + playerScore + "  Computer: " + computerScore);
-        return new Label(scoreBoard.getText());
-    }
-    public Label addScore(boolean playerWin){
-        if(playerWin){
-            playerScore++;
-        }else {
-            computerScore++;
-        }
-        return generateScoreBoard();
+class ScoreBoard {
+    static String player1Name = "player1";
+    static String player2Name = "player2";
+    static Label player1NameLabel = new Label(player1Name + ": ");
+    static Label player2NameLabel = new Label(player2Name + ": ");
+    static Label player1Score = new Label();
+    static Label player2Score = new Label();
+
+
+
+    static void setPlayer1Name(String playerName) {
+        player1Name = playerName;
+        player1NameLabel.setText(player1Name + ": ");
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+    static void setPlayer2Name(String playerName) {
+        player2Name = playerName;
+        player2NameLabel.setText(player2Name + ": ");
     }
-    public String generateScoreBoardText (){
-        scoreBoard.setText(playerName + ": " + playerScore + "  Computer: " + computerScore);
-        return scoreBoard.getText();
+
+    static void setPlayersScore() {
+        player1Score.textProperty().bind(new SimpleIntegerProperty(GameBoard.greyPawnList.size()).asString());
+        player2Score.textProperty().bind(new SimpleIntegerProperty(GameBoard.redPawnList.size()).asString());
+    }
+
+    static String getPlayer1Name() {
+        return player1Name;
+    }
+
+    static String getPlayer2Name() {
+        return player2Name;
     }
 }

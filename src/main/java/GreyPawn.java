@@ -6,8 +6,8 @@ public class GreyPawn extends Pawn {
     private Image greyKing = new Image("greyKing.png");
     private ImageView view = new ImageView();
 
-    public GreyPawn(int posX, int posY) {
-        super(posX, posY, "player");
+    GreyPawn(int posX, int posY) {
+        super(posX, posY, "player1");
         view.setImage(greyMan);
         view.setFitWidth(100);
         view.setFitHeight(100);

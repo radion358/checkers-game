@@ -1,5 +1,8 @@
 import javafx.scene.layout.StackPane;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class Pawn extends StackPane {
     private int posX;
@@ -7,126 +10,125 @@ public abstract class Pawn extends StackPane {
     private boolean isKing;
     private final String whoIs;
 
-    public Pawn(int posX, int posY, String whoIs) {
+    Pawn(int posX, int posY, String whoIs) {
         this.posX = posX;
         this.posY = posY;
         this.isKing = false;
         this.whoIs = whoIs;
     }
 
-    public int getPosX() {
+    int getPosX() {
         return posX;
     }
 
-    public int getPosY() {
+    int getPosY() {
         return posY;
     }
 
-    public String getWhoIs() {
+    String getWhoIs() {
         return whoIs;
     }
 
-    public void setPosX(int posX) {
+    void setPosX(int posX) {
         this.posX = posX;
     }
 
-    public void setPosY(int posY) {
+    void setPosY(int posY) {
         this.posY = posY;
     }
 
-    public void setKing(boolean king) {
-        isKing = king;
+    void setKing() {
+        isKing = true;
     }
 
-    public void getAvailableMoves(GameBoard gameBoard) {
+    List<Move> getAvailableMoves(GameBoard gameBoard) {
         int x;
         int y;
-        if(gameBoard.whoseTurn.equals(getWhoIs())) {
-            if (isKing) {
-                for (x = getPosX() - 1, y = getPosY() - 1; isBoardContainsField(x, y); x--, y--) {
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y - 1)) {
-                        addAvailableMoveTile(gameBoard, this, x - 1, y - 1, x, y);
-                        break;
-                    }else break;
-                }
-                for (x = getPosX() - 1, y = getPosY() + 1; isBoardContainsField(x, y); x--, y++) {
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y + 1)) {
-                        addAvailableMoveTile(gameBoard, this, x - 1, y + 1, x, y);
-                        break;
-                    }else break;
-                }
-                for (x = getPosX() + 1, y = getPosY() - 1; isBoardContainsField(x, y); x++, y--) {
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y - 1)) {
-                        addAvailableMoveTile(gameBoard, this, x + 1, y - 1, x, y);
-                        break;
-                    }else break;
-                }
-                for (x = getPosX() + 1, y = getPosY() + 1; isBoardContainsField(x, y); x++, y++) {
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y + 1)) {
-                        addAvailableMoveTile(gameBoard, this, x + 1, y + 1, x, y);
-                        break;
-                    }else break;
-                }
-            } else {
-                if (this instanceof GreyPawn) {
-                    x = getPosX() - 1;
-                    y = getPosY() - 1;
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    } else {
-                        checkMoveAvailability(gameBoard, x, y, "up left");
-                    }
-
-                    x = getPosX() + 1;
-                    y = getPosY() - 1;
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    } else checkMoveAvailability(gameBoard, x, y, "up right");
-
-                    x = getPosX() - 1;
-                    y = getPosY() + 1;
-                    checkMoveAvailability(gameBoard, x, y, "down left");
-
-                    x = getPosX() + 1;
-                    y = getPosY() + 1;
-                    checkMoveAvailability(gameBoard, x, y, "down right");
-                }else {
-                    x = getPosX() - 1;
-                    y = getPosY() - 1;
-                    checkMoveAvailability(gameBoard, x, y, "up left");
-
-                    x = getPosX() - 1;
-                    y = getPosY() + 1;
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    } else {
-                        checkMoveAvailability(gameBoard, x, y, "down left");
-                    }
-
-                    x = getPosX() + 1;
-                    y = getPosY() - 1;
-                    checkMoveAvailability(gameBoard, x, y, "up right");
-
-                    x = getPosX() + 1;
-                    y = getPosY() + 1;
-                    if (gameBoard.isMoveAllowed(this, x, y)) {
-                        addAvailableMoveTile(gameBoard, this, x, y);
-                    } else checkMoveAvailability(gameBoard, x, y, "down right");
+        List<Move> availableMoves = new ArrayList<>();
+        if (isKing) {
+            for (x = getPosX() - 1, y = getPosY() - 1; isBoardContainsField(x, y); x--, y--) {
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y - 1)) {
+                    availableMoves.add(new Move(x - 1, y - 1, this, x, y));
+                    break;
+                }else break;
+            }
+            for (x = getPosX() - 1, y = getPosY() + 1; isBoardContainsField(x, y); x--, y++) {
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y + 1)) {
+                    availableMoves.add(new Move(x - 1, y + 1, this, x, y));
+                    break;
+                }else break;
+            }
+            for (x = getPosX() + 1, y = getPosY() - 1; isBoardContainsField(x, y); x++, y--) {
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y - 1)) {
+                    availableMoves.add(new Move(x + 1, y - 1, this, x, y));
+                    break;
+                }else break;
+            }
+            for (x = getPosX() + 1, y = getPosY() + 1; isBoardContainsField(x, y); x++, y++) {
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y + 1)) {
+                    availableMoves.add(new Move(x + 1, y + 1, this, x, y));
+                    break;
+                }else break;
+            }
+        } else {
+            if (this instanceof GreyPawn) {
+                x = getPosX() - 1;
+                y = getPosY() - 1;
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                } else {
+                    checkMoveAvailability(gameBoard, x, y, "up left", availableMoves);
                 }
 
+                x = getPosX() + 1;
+                y = getPosY() - 1;
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                } else checkMoveAvailability(gameBoard, x, y, "up right", availableMoves);
+
+                x = getPosX() - 1;
+                y = getPosY() + 1;
+                checkMoveAvailability(gameBoard, x, y, "down left", availableMoves);
+
+                x = getPosX() + 1;
+                y = getPosY() + 1;
+                checkMoveAvailability(gameBoard, x, y, "down right", availableMoves);
+            }else {
+                x = getPosX() - 1;
+                y = getPosY() - 1;
+                checkMoveAvailability(gameBoard, x, y, "up left", availableMoves);
+
+                x = getPosX() - 1;
+                y = getPosY() + 1;
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                } else {
+                    checkMoveAvailability(gameBoard, x, y, "down left", availableMoves);
+                }
+
+                x = getPosX() + 1;
+                y = getPosY() - 1;
+                checkMoveAvailability(gameBoard, x, y, "up right", availableMoves);
+
+                x = getPosX() + 1;
+                y = getPosY() + 1;
+                if (gameBoard.isMoveAllowed(this, x, y)) {
+                    availableMoves.add(new Move(x, y, this));
+                } else checkMoveAvailability(gameBoard, x, y, "down right", availableMoves);
             }
         }
+        return availableMoves;
     }
 
-    private void checkMoveAvailability(GameBoard gameBoard, int x, int y, String direction) {
+    private void checkMoveAvailability(GameBoard gameBoard, int x, int y, String direction, List<Move> availableMoves) {
         int nextPosX, nextPosY;
         switch (direction) {
             case "up right":
@@ -154,7 +156,7 @@ public abstract class Pawn extends StackPane {
         if (isJumpingOverOpponent(gameBoard, x, y, nextPosX, nextPosY)) {
             if (isBoardContainsField(nextPosX, nextPosY)) {
                 if (gameBoard.isFieldEmpty(nextPosX, nextPosY)) {
-                    addAvailableMoveTile(gameBoard, this, nextPosX, nextPosY, x, y);
+                    availableMoves.add(new Move(nextPosX, nextPosY, this, x, y));
                 }
             }
         }
@@ -170,21 +172,6 @@ public abstract class Pawn extends StackPane {
         return false;
     }
 
-    public void addAvailableMoveTile(GameBoard board, Pawn pawn, int availableMoveX, int availableMoveY, int pawnToRemoveX, int pawnToRemoveY) {
-        Tile tile = new Tile(availableMoveX, availableMoveY, 110, 110);
-        board.gameBoard.add(tile, availableMoveX, availableMoveY);
-        board.availableMoves.add(tile);
-        tile.setOnMouseClicked(e -> {
-            board.addPawnToRemove(pawnToRemoveX, pawnToRemoveY);
-            board.move(pawn, tile.getPosX(), tile.getPosY());
-        });
-    }
-    public void addAvailableMoveTile(GameBoard board, Pawn pawn, int availableMoveX, int availableMoveY) {
-        Tile tile = new Tile(availableMoveX, availableMoveY, 110, 110);
-        board.gameBoard.add(tile, availableMoveX, availableMoveY);
-        board.availableMoves.add(tile);
-        tile.setOnMouseClicked(e -> board.move(pawn, tile.getPosX(), tile.getPosY()));
-    }
     private boolean isBoardContainsField (int x, int y) {
         return x >= 0 && x <= 7 && y >= 0 && y <= 7;
     }

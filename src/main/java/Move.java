@@ -1,17 +1,48 @@
-public class Move {
-    int posX;
-    int posY;
+class Move {
+    private int posX;
+    private int posY;
+    private Pawn pawn;
+    private int pawnToRemovePosX;
+    private int pawnToRemovePosY;
+    private boolean isJumpingOverOpponent;
 
-    public Move(int posX, int posY) {
+    Move(int posX, int posY, Pawn pawn) {
         this.posX = posX;
         this.posY = posY;
+        this.pawn = pawn;
+        this.isJumpingOverOpponent = false;
     }
 
-    public int getPosX() {
+    Move(int posX, int posY, Pawn pawn, int pawnToRemovePosX, int pawnToRemovePosY) {
+        this.posX = posX;
+        this.posY = posY;
+        this.pawn = pawn;
+        this.pawnToRemovePosX = pawnToRemovePosX;
+        this.pawnToRemovePosY = pawnToRemovePosY;
+        this.isJumpingOverOpponent = true;
+    }
+
+    int getPosX() {
         return posX;
     }
 
-    public int getPosY() {
+    int getPosY() {
         return posY;
+    }
+
+    public int getPawnToRemovePosX() {
+        return pawnToRemovePosX;
+    }
+
+    public int getPawnToRemovePosY() {
+        return pawnToRemovePosY;
+    }
+
+    Pawn getPawn() {
+        return pawn;
+    }
+
+    public boolean isJumpingOverOpponent() {
+        return isJumpingOverOpponent;
     }
 }
