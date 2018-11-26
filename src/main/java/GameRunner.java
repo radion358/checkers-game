@@ -1,9 +1,11 @@
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.io.IOUtils;
 
@@ -11,6 +13,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class GameRunner extends Application {
+    private GameBoard gameBoard;
 
     public static void main(String[] args) {
         launch(args);
@@ -18,9 +21,9 @@ public class GameRunner extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        GameBoard gameBoard = new GameBoard();
-
-        GridPane board = gameBoard.deal();
+        gameBoard = new GameBoard(this);
+        gameBoard.drawBoard();
+        GridPane board = gameBoard.board;
 
         board.setAlignment(Pos.CENTER);
 
@@ -47,9 +50,11 @@ public class GameRunner extends Application {
 
 
         //Menu bar
-        Menu newGame = new Menu("_New game...");
-        Menu changePlayerName = new Menu("_Change player name...");
-        Menu gameRules = new Menu("_Game rules...");
+        Menu game = new Menu("Game");
+        MenuItem newGame = new MenuItem("_New game...");
+        MenuItem changePlayerName = new MenuItem("_Change player name...");
+        MenuItem gameRules = new MenuItem("_Game rules...");
+        game.getItems().addAll(newGame, changePlayerName,gameRules);
         Menu changeTheme = new Menu("_Change theme");
 
         ToggleGroup themeToggle = new ToggleGroup();
@@ -62,13 +67,13 @@ public class GameRunner extends Application {
         theme3.setToggleGroup(themeToggle);
         changeTheme.getItems().addAll(theme1, theme2, theme3);
 
-
+//       menu eventHandler
+        newGame.setOnAction(e -> startGame());
+        gameRules.setOnAction(event -> showRules());
+        changePlayerName.setOnAction(event -> changePlayerName());
 
         MenuBar gameMenuBar = new MenuBar();
-        gameMenuBar.getMenus().add(newGame);
-        gameMenuBar.getMenus().add(changePlayerName);
-        gameMenuBar.getMenus().add(gameRules);
-        gameMenuBar.getMenus().add(changeTheme);
+        gameMenuBar.getMenus().addAll(game, changeTheme);
 
         background.getChildren().addAll(scoreTable, board);
         root.getChildren().addAll(gameMenuBar, background);
@@ -79,38 +84,14 @@ public class GameRunner extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Button startGame = new Button("Start game");
-        TextField player1NameInput = new TextField("Grey");
-        Label player1NameInputLabel = new Label("Enter player name:");
-        TextField player2NameInput = new TextField("Red");
-        Label player2NameInputLabel = new Label("Enter player name:");
+        startGame();
 
-        Stage newGameStage = new Stage();
-        startGame.setOnAction(event -> {
-            if(nameValidator(player1NameInput.getText()) && nameValidator(player2NameInput.getText())) {
-                ScoreBoard.setPlayer1Name(player1NameInput.getText());
-                ScoreBoard.setPlayer2Name(player2NameInput.getText());
-                newGameStage.close();
-            }
-        });
-        HBox controlBox = new HBox();
-        controlBox.getChildren().addAll(player1NameInputLabel, player1NameInput, player2NameInputLabel, player2NameInput, startGame);
-        VBox mainBox = new VBox();
-        controlBox.setAlignment(Pos.CENTER);
-        controlBox.setSpacing(20);
-        Label rules = new Label();
-        rules.setText(readRules());
-        mainBox.getChildren().addAll(controlBox, rules);
-        newGameStage.setTitle("New Game");
-        Scene newGameScene = new Scene(mainBox, 800, 600);
-        newGameStage.setScene(newGameScene);
-        newGameStage.show();
+
 
 
 
     }
     private static boolean nameValidator(String input) {
-        System.out.println(input);
         return Pattern.matches("[a-zA-Z]+", input);
     }
     private String readRules() {
@@ -123,26 +104,117 @@ public class GameRunner extends Application {
         }
         return rules;
     }
-    public static void showWinner(String whoWin){
-        Label winner = new Label();
+    void showWinner(String whoWin){
+        String message;
         if (whoWin.equals("player1")){
-            winner.setText(ScoreBoard.getPlayer1Name() + " Win");
+            message = ScoreBoard.getPlayer1Name() + " Win";
         }else {
-            winner.setText(ScoreBoard.getPlayer2Name() + " Win");
+            message = ScoreBoard.getPlayer2Name() + " Win";
         }
-        winner.setFont(new Font(40));
+        String title = "congratulation!!!";
+        showAlertBox(title, message);
+    }
+
+    private void startGame() {
+        Button startGame = new Button("Start game");
+        TextField player1NameInput = new TextField("Grey");
+        Label player1NameInputLabel = new Label("Enter player name:");
+        TextField player2NameInput = new TextField("Red");
+        Label player2NameInputLabel = new Label("Enter player name:");
+
+        Stage newGameStage = new Stage();
+        newGameStage.initModality(Modality.APPLICATION_MODAL);
+        startGame.setOnAction(event -> {
+            if(nameValidator(player1NameInput.getText()) && nameValidator(player2NameInput.getText())) {
+                ScoreBoard.setPlayer1Name(player1NameInput.getText());
+                ScoreBoard.setPlayer2Name(player2NameInput.getText());
+                newGameStage.close();
+                gameBoard.deal();
+
+            }
+        });
+        HBox controlBox = new HBox();
+        controlBox.getChildren().addAll(player1NameInputLabel, player1NameInput, player2NameInputLabel, player2NameInput, startGame);
+        VBox mainBox = new VBox();
+        controlBox.setAlignment(Pos.CENTER);
+        controlBox.setSpacing(20);
+        Label rules = new Label();
+        rules.setText(readRules());
+        rules.setPadding(new Insets(10));
+        mainBox.getChildren().addAll(controlBox, rules);
+        newGameStage.setTitle("New Game");
+        Scene newGameScene = new Scene(mainBox, 800, 600);
+        newGameStage.setScene(newGameScene);
+        newGameStage.show();
+
+    }
+
+    private void showRules() {
+        Label rules = new Label();
+        rules.setText(readRules());
+        rules.setPadding(new Insets(10));
+        Scene rulesScene = new Scene(rules);
+        Stage rulesStage = new Stage();
+        rulesStage.setTitle("Game rules");
+        rulesStage.setScene(rulesScene);
+        rulesStage.show();
+    }
+
+    void showDraw() {
+        String title = "Tie";
+        String message = "There is a tie\nTry again";
+        showAlertBox(title, message);
+    }
+
+    private void showAlertBox(String title, String message) {
+        Label messageToShow = new Label(message);
+
+        messageToShow.setFont(new Font(40));
         Button newGame = new Button("new game");
 
-        VBox showWinner = new VBox();
-        showWinner.getChildren().addAll(winner, newGame);
-        showWinner.setAlignment(Pos.CENTER);
 
-        Scene winnerScene = new Scene(showWinner, 400, 300);
+        VBox alertBox = new VBox();
+        alertBox.getChildren().addAll(messageToShow, newGame);
+        alertBox.setAlignment(Pos.CENTER);
 
-        Stage winnerStage = new Stage();
-        winnerStage.setTitle("Congratulation!!!");
-        winnerStage.setScene(winnerScene);
-        winnerStage.showAndWait();
+        Scene winnerScene = new Scene(alertBox, 400, 300);
 
+        Stage alertBoxStage = new Stage();
+        alertBoxStage.initModality(Modality.APPLICATION_MODAL);
+        alertBoxStage.setTitle(title);
+        alertBoxStage.setScene(winnerScene);
+        alertBoxStage.setAlwaysOnTop(true);
+        alertBoxStage.setResizable(false);
+        alertBoxStage.show();
+        newGame.setOnAction(event -> {
+            startGame();
+            alertBoxStage.close();
+        });
+    }
+
+    private void changePlayerName() {
+        TextField player1Name = new TextField(ScoreBoard.getPlayer1Name());
+        TextField player2Name = new TextField(ScoreBoard.getPlayer2Name());
+        Button changeNames = new Button("change names");
+
+        VBox sceneBox = new VBox();
+        sceneBox.getChildren().addAll(player1Name, player2Name, changeNames);
+        sceneBox.setFillWidth(false);
+        sceneBox.setSpacing(30);
+        sceneBox.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(sceneBox, 300, 200);
+        Stage changePlayerNameStage = new Stage();
+        changePlayerNameStage.setScene(scene);
+        changePlayerNameStage.setTitle("Change name");
+        changePlayerNameStage.show();
+
+
+        changeNames.setOnAction(event -> {
+            if (nameValidator(player1Name.getText()) && nameValidator(player2Name.getText())) {
+                ScoreBoard.setPlayer1Name(player1Name.getText());
+                ScoreBoard.setPlayer2Name(player2Name.getText());
+                changePlayerNameStage.close();
+            }
+        });
     }
 }

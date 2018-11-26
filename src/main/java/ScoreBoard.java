@@ -2,8 +2,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Label;
 
 class ScoreBoard {
-    static String player1Name = "player1";
-    static String player2Name = "player2";
+    private static String player1Name = "Grey";
+    private static String player2Name = "Red";
     static Label player1NameLabel = new Label(player1Name + ": ");
     static Label player2NameLabel = new Label(player2Name + ": ");
     static Label player1Score = new Label();
