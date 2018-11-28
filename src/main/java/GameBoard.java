@@ -25,16 +25,16 @@ class GameBoard {
         pawnsToRemove.clear();
         availableMoves.clear();
         board = drawBoard();
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 3; y++){
-                if((x + y) % 2 != 0){
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 3; y++){
+                if ((x + y) % 2 != 0){
                     placePawnOnBoard(redPawnList, x, y);
                 }
             }
         }
-        for(int x = 0; x < 8; x++) {
-            for(int y = 5; y < 8; y++){
-                if((x + y) % 2 != 0){
+        for (int x = 0; x < 8; x++) {
+            for (int y = 5; y < 8; y++){
+                if ((x + y) % 2 != 0){
                     placePawnOnBoard(greyPawnList, x, y);
                 }
             }
@@ -44,13 +44,11 @@ class GameBoard {
     }
 
      GridPane drawBoard() {
-//        board.setStyle("-fx-border-color: silver;\n"
-//                + "-fx-border-width: 10;\n");
         board.getChildren().removeAll();
 
-        for(int x = 0; x < 8; x++) {
-            for(int y = 0; y < 8; y++){
-                if((x + y) % 2 == 0){
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++){
+                if ((x + y) % 2 == 0){
                     Rectangle lightTile = new Rectangle( 110, 110, Color.YELLOW);
                     board.add(lightTile, x, y);
                 }else {
@@ -61,9 +59,9 @@ class GameBoard {
         }
         return board;
     }
-    private void move (Pawn pawn, int newPosX, int newPosY) {
+    private void move(Pawn pawn, int newPosX, int newPosY) {
 
-        if(pawn instanceof GreyPawn) {
+        if (pawn instanceof GreyPawn) {
             greyPawnList.remove(pawn);
             Pawn newPawn = changePawnPosition(pawn, newPosX, newPosY);
             greyPawnList.add(newPawn);
@@ -82,8 +80,8 @@ class GameBoard {
             greyPawnList.remove(pawnToRemove);
         }
 
-        if(pawn instanceof GreyPawn){
-            if(pawn.getPosY() == 0){
+        if (pawn instanceof GreyPawn) {
+            if (pawn.getPosY() == 0) {
                 pawn.setKing();
                 pawn.changeToKing();
             }
@@ -106,7 +104,7 @@ class GameBoard {
     }
 
     boolean isMoveAllowed (Pawn pawn, int newPosX, int newPosY) {
-        if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()){
+        if (newPosX != pawn.getPosX() && newPosY != pawn.getPosY()) {
             return isFieldEmpty(newPosX, newPosY);
         }
         return false;
@@ -164,10 +162,10 @@ class GameBoard {
                 pawnToRemoveFromPawnList.add(pawn);
             }
         }
-        for(Pawn pawn: pawnToRemoveFromPawnList) {
+        for (Pawn pawn: pawnToRemoveFromPawnList) {
             pawnList.remove(pawn);
         }
-        if(pawnList.size() != 0) return pawnList.get(0);
+        if (pawnList.size() != 0) return pawnList.get(0);
         return null;
     }
     private Pawn changePawnPosition(Pawn pawn, int newPosX, int newPosY) {
@@ -199,7 +197,7 @@ class GameBoard {
         Tile tile = new Tile(availableMoveX, availableMoveY, 110, 110);
         board.add(tile, availableMoveX, availableMoveY);
         availableMoves.add(tile);
-        tile.setOnMouseClicked(e -> {
+        tile.setOnMouseClicked(event -> {
             addPawnToRemove(pawnToRemoveX, pawnToRemoveY);
             move(pawn, tile.getPosX(), tile.getPosY());
         });
@@ -208,17 +206,17 @@ class GameBoard {
         Tile tile = new Tile(availableMoveX, availableMoveY, 110, 110);
         board.add(tile, availableMoveX, availableMoveY);
         availableMoves.add(tile);
-        tile.setOnMouseClicked(e -> move(pawn, tile.getPosX(), tile.getPosY()));
+        tile.setOnMouseClicked(event -> move(pawn, tile.getPosX(), tile.getPosY()));
     }
     private void placePawnOnBoard(List<Pawn> pawnList, int x, int y) {
         Pawn pawn;
         if (pawnList.equals(redPawnList)) {
             pawn = new RedPawn(x, y);
-        }else pawn = new GreyPawn(x, y);
+        } else pawn = new GreyPawn(x, y);
         pawnList.add(pawn);
         board.add(pawn, x, y);
         pawn.setOnMouseClicked((MouseEvent e) -> {
-            if (whoseTurn.equals(pawn.getWhoIs())){
+            if (whoseTurn.equals(pawn.getWhoIs())) {
                 showAvailableMove(pawn);
             }
         });

@@ -55,31 +55,21 @@ public class GameRunner extends Application {
         MenuItem changePlayerName = new MenuItem("_Change player name...");
         MenuItem gameRules = new MenuItem("_Game rules...");
         game.getItems().addAll(newGame, changePlayerName,gameRules);
-        Menu changeTheme = new Menu("_Change theme");
 
-        ToggleGroup themeToggle = new ToggleGroup();
-        RadioMenuItem theme1 = new RadioMenuItem("some theme");
-        RadioMenuItem theme2 = new RadioMenuItem("some other theme");
-        RadioMenuItem theme3 = new RadioMenuItem("something else");
-
-        theme1.setToggleGroup(themeToggle);
-        theme2.setToggleGroup(themeToggle);
-        theme3.setToggleGroup(themeToggle);
-        changeTheme.getItems().addAll(theme1, theme2, theme3);
 
 //       menu eventHandler
-        newGame.setOnAction(e -> startGame());
+        newGame.setOnAction(event -> startGame());
         gameRules.setOnAction(event -> showRules());
         changePlayerName.setOnAction(event -> changePlayerName());
 
         MenuBar gameMenuBar = new MenuBar();
-        gameMenuBar.getMenus().addAll(game, changeTheme);
+        gameMenuBar.getMenus().add(game);
 
         background.getChildren().addAll(scoreTable, board);
         root.getChildren().addAll(gameMenuBar, background);
 
-        Scene scene = new Scene(root, 890, 973);
-//        primaryStage.setResizable(false);
+        Scene scene = new Scene(root, 890, 953);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Checkers game");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -104,9 +94,9 @@ public class GameRunner extends Application {
         }
         return rules;
     }
-    void showWinner(String whoWin){
+    void showWinner(String whoWin) {
         String message;
-        if (whoWin.equals("player1")){
+        if (whoWin.equals("player1")) {
             message = ScoreBoard.getPlayer1Name() + " Win";
         }else {
             message = ScoreBoard.getPlayer2Name() + " Win";
@@ -143,7 +133,7 @@ public class GameRunner extends Application {
         rules.setPadding(new Insets(10));
         mainBox.getChildren().addAll(controlBox, rules);
         newGameStage.setTitle("New Game");
-        Scene newGameScene = new Scene(mainBox, 800, 600);
+        Scene newGameScene = new Scene(mainBox, 810, 620);
         newGameStage.setScene(newGameScene);
         newGameStage.show();
 
