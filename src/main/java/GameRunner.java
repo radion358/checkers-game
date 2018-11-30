@@ -111,6 +111,8 @@ public class GameRunner extends Application {
         Label player1NameInputLabel = new Label("Enter player name:");
         TextField player2NameInput = new TextField("Red");
         Label player2NameInputLabel = new Label("Enter player name:");
+        Label playAgainstComputerLabel = new Label("Computer");
+        CheckBox playingAgainstComputer = new CheckBox();
 
         Stage newGameStage = new Stage();
         newGameStage.initModality(Modality.APPLICATION_MODAL);
@@ -120,11 +122,12 @@ public class GameRunner extends Application {
                 ScoreBoard.setPlayer2Name(player2NameInput.getText());
                 newGameStage.close();
                 gameBoard.deal();
-
+                gameBoard.setPlayingAgainstTheComputer(playingAgainstComputer.isSelected());
             }
         });
         HBox controlBox = new HBox();
-        controlBox.getChildren().addAll(player1NameInputLabel, player1NameInput, player2NameInputLabel, player2NameInput, startGame);
+        controlBox.getChildren().addAll(player1NameInputLabel, player1NameInput, player2NameInputLabel,
+                player2NameInput,playAgainstComputerLabel, playingAgainstComputer, startGame);
         VBox mainBox = new VBox();
         controlBox.setAlignment(Pos.CENTER);
         controlBox.setSpacing(20);

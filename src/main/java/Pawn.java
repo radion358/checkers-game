@@ -48,33 +48,33 @@ public abstract class Pawn extends StackPane {
         if (isKing) {
             for (x = getPosX() - 1, y = getPosY() - 1; isBoardContainsField(x, y); x--, y--) {
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y - 1)) {
-                    availableMoves.add(new Move(x - 1, y - 1, x, y));
+                    availableMoves.add(new Move(this, x - 1, y - 1, x, y));
                     break;
                 }else break;
             }
             for (x = getPosX() - 1, y = getPosY() + 1; isBoardContainsField(x, y); x--, y++) {
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 }else if (isJumpingOverOpponent(gameBoard, x, y, x - 1, y + 1)) {
-                    availableMoves.add(new Move(x - 1, y + 1, x, y));
+                    availableMoves.add(new Move(this, x - 1, y + 1, x, y));
                     break;
                 }else break;
             }
             for (x = getPosX() + 1, y = getPosY() - 1; isBoardContainsField(x, y); x++, y--) {
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y - 1)) {
-                    availableMoves.add(new Move(x + 1, y - 1, x, y));
+                    availableMoves.add(new Move(this, x + 1, y - 1, x, y));
                     break;
                 }else break;
             }
             for (x = getPosX() + 1, y = getPosY() + 1; isBoardContainsField(x, y); x++, y++) {
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 }else if (isJumpingOverOpponent(gameBoard, x, y, x + 1, y + 1)) {
-                    availableMoves.add(new Move(x + 1, y + 1, x, y));
+                    availableMoves.add(new Move(this, x + 1, y + 1, x, y));
                     break;
                 }else break;
             }
@@ -83,7 +83,7 @@ public abstract class Pawn extends StackPane {
                 x = getPosX() - 1;
                 y = getPosY() - 1;
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 } else {
                     checkMoveAvailability(gameBoard, x, y, "up left", availableMoves);
                 }
@@ -91,7 +91,7 @@ public abstract class Pawn extends StackPane {
                 x = getPosX() + 1;
                 y = getPosY() - 1;
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 } else checkMoveAvailability(gameBoard, x, y, "up right", availableMoves);
 
                 x = getPosX() - 1;
@@ -109,7 +109,7 @@ public abstract class Pawn extends StackPane {
                 x = getPosX() - 1;
                 y = getPosY() + 1;
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 } else {
                     checkMoveAvailability(gameBoard, x, y, "down left", availableMoves);
                 }
@@ -121,7 +121,7 @@ public abstract class Pawn extends StackPane {
                 x = getPosX() + 1;
                 y = getPosY() + 1;
                 if (gameBoard.isMoveAllowed(this, x, y)) {
-                    availableMoves.add(new Move(x, y));
+                    availableMoves.add(new Move(this, x, y));
                 } else checkMoveAvailability(gameBoard, x, y, "down right", availableMoves);
             }
         }
@@ -156,7 +156,7 @@ public abstract class Pawn extends StackPane {
         if (isJumpingOverOpponent(gameBoard, x, y, nextPosX, nextPosY)) {
             if (isBoardContainsField(nextPosX, nextPosY)) {
                 if (gameBoard.isFieldEmpty(nextPosX, nextPosY)) {
-                    availableMoves.add(new Move(nextPosX, nextPosY, x, y));
+                    availableMoves.add(new Move(this, nextPosX, nextPosY, x, y));
                 }
             }
         }

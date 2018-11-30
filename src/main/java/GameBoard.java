@@ -5,6 +5,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 class GameBoard {
     static final List<Pawn> greyPawnList = new ArrayList<>();
@@ -14,9 +15,14 @@ class GameBoard {
     private String whoseTurn;
     GridPane board = new GridPane();
     private GameRunner gameRunner;
+    private Boolean playingAgainstTheComputer;
 
     GameBoard(GameRunner gameRunner) {
         this.gameRunner = gameRunner;
+    }
+
+    void setPlayingAgainstTheComputer(Boolean playingAgainstTheComputer) {
+        this.playingAgainstTheComputer = playingAgainstTheComputer;
     }
 
     void deal() {
@@ -100,6 +106,9 @@ class GameBoard {
             gameRunner.showDraw();
         }else {
             toggleTurn();
+            if (whoseTurn.equals("player2") && playingAgainstTheComputer) {
+                computerMove();
+            }
         }
     }
 
@@ -220,5 +229,21 @@ class GameBoard {
                 showAvailableMove(pawn);
             }
         });
+    }
+
+    private void computerMove() {
+        Random randomGenerator = new Random();
+        List<Move> computerAvailableMoves = new ArrayList<>();
+        for (Pawn pawn: redPawnList) {
+            List<Move> availablePawnMoves = pawn.getAvailableMoves(this);
+            if(availablePawnMoves.size() != 0) {
+               computerAvailableMoves.addAll(availablePawnMoves);
+            }
+        }
+        Move randomMove = computerAvailableMoves.get(randomGenerator.nextInt(computerAvailableMoves.size()));
+        if (randomMove.isJumpingOverOpponent()) {
+            addPawnToRemove(randomMove.getPawnToRemovePosX(), randomMove.getPawnToRemovePosY());
+        }
+        move(randomMove.getPawn(), randomMove.getPosX(), randomMove.getPosY());
     }
 }
